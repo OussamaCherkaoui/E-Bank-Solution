@@ -3,6 +3,7 @@ package com.diabets.eBank.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -20,7 +21,7 @@ public class CarteBloque {
     @Column
     private String raison;
     @Column
-    private Date dateBlocage;
+    private LocalDate dateBlocage;
     @OneToOne
     @JoinColumn(name = "numeroCarte")
     private Carte carte;

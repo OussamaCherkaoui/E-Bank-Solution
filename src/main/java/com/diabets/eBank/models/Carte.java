@@ -3,6 +3,7 @@ package com.diabets.eBank.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,16 +18,17 @@ import java.util.List;
 @Table(name = "Carte")
 public class Carte {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer numeroCarte;
+    private String numeroCarte;
     @Column
     private Integer codePin;
     @Column
-    private Date dateExpiration;
+    private LocalDate dateExpiration;
     @Column
     private String typeCarte;
     @Column
     private String etat;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean estBloque;
     @OneToMany(mappedBy = "carte", fetch = FetchType.EAGER)
     private List<Transaction> transactions = new ArrayList<>();
     @OneToOne(mappedBy = "carte")

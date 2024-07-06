@@ -3,6 +3,7 @@ package com.diabets.eBank.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,18 +18,17 @@ import java.util.List;
 @Table(name = "Compte")
 public class Compte {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer numeroCompte;
+    private String numeroCompte;
     @Column
     private String typeCompte;
     @Column
-    private Integer solde;
+    private Double solde;
     @Column
-    private Date dateOuverture;
-    @Column
-    private String nomProprietaire;
+    private LocalDate dateOuverture;
     @Column
     private Integer motDePass;
+    @Column
+    private Boolean estFerme;
     @OneToOne(mappedBy = "compte")
     private CompteFerme compteFerme;
     @OneToOne(mappedBy = "compte")
@@ -37,9 +37,10 @@ public class Compte {
     private List<Carte> cartes = new ArrayList<>();
     @OneToMany(mappedBy = "compte", fetch = FetchType.EAGER)
     private List<Beneficiaire> beneficiaires = new ArrayList<>();
-    @OneToOne(mappedBy = "compteBeneficiaire")
-    private Beneficiaire beneficiaire;
     @ManyToOne
     @JoinColumn(name = "idBanque")
     private Banque banque;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

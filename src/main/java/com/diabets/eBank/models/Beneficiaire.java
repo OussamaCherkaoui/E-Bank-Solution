@@ -18,7 +18,6 @@ public class Beneficiaire {
     @ManyToOne
     @JoinColumn(name = "numeroCompte")
     private Compte compte;
-    @OneToOne
-    @JoinColumn(name = "numeroCompteBeneficiaire")
-    private Compte compteBeneficiaire;
+    @Column
+    private String numeroCompteBeneficiaire;
 }

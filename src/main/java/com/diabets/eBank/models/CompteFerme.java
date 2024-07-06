@@ -3,6 +3,7 @@ package com.diabets.eBank.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class CompteFerme {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer numeroCompteFerme;
     @Column
-    private Date dateFermiture;
+    private LocalDate dateFermeture;
     @Column
     private String raison;
     @OneToOne
