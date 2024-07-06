@@ -31,8 +31,11 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public Optional<Carte> getCartByNumeroCart(Integer numeroCart){
-        return cartRepository.findById(numeroCart);
+    public Carte getCartByNumeroCart(String numeroCart){
+        return cartRepository.findByNumeroCarte(numeroCart);
+    }
+    public Optional<Carte> getCartByNumeroCartAndCodePin(String numeroCart,Integer codePin){
+        return cartRepository.findByNumeroCarteAndCodePin(numeroCart,codePin);
     }
     public List<Carte> getAllCartByNumeroCompte(String numeroCompte){
         Compte compte = compteRepository.findByNumeroCompte(numeroCompte);
@@ -46,11 +49,11 @@ public class CartService {
     {
         cartRepository.desactiverCart(numeroCart);
     }
+
     public CarteBloque bloqueCart(String numeroCart,String raison){
         cartRepository.bloqueCart(numeroCart);
         Carte cart = cartRepository.findByNumeroCarte(numeroCart);
         CarteBloque carteBloque = new CarteBloque();
-        carteBloque.setRaison(raison);
         carteBloque.setDateBlocage(LocalDate.now());
         carteBloque.setCarte(cart);
         carteBloque.setRaison(raison);
@@ -81,4 +84,9 @@ public class CartService {
         }
         return codePin;
     }
+    public Integer getCodePinByNumeroCart(String numeroCart)
+    {
+        return cartRepository.getCodePinbyNumeroCart(numeroCart);
+    }
+
 }

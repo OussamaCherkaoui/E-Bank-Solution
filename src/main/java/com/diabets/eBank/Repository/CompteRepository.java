@@ -15,9 +15,14 @@ public interface CompteRepository extends JpaRepository<Compte, Integer> {
     Optional<Compte> findByNumeroCompteAndMotDePass(String numero,Integer motdePass);
 
     @Modifying
-    @Query(value = "update Compte c set c.est_ferme=true  where c.numero_compte = :numeroCompte", nativeQuery = true)
+    @Query(value = "update Compte set est_ferme=true  where numero_compte = :numeroCompte", nativeQuery = true)
     void fermeCompte(@Param("numeroCompte") String numeroCompte);
 
     Compte findByNumeroCompte(String numero);
     boolean existsByNumeroCompte(String numero);
+
+    @Query(value = "select solde from compte inner join carte on compte.numero_compte=carte.numero_compte where carte.numero_carte = :numeroCart", nativeQuery = true)
+    Integer getSoldeByNumeroCart(@Param("numeroCart") String numeroCart);
+    @Query(value = "select numero_compte from carte where carte.numero_carte = :numeroCart", nativeQuery = true)
+    String getnumeroCompteByNumeroCart(@Param("numeroCart") String numeroCart);
 }

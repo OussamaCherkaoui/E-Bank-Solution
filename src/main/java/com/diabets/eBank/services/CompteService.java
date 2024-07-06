@@ -69,4 +69,16 @@ public class CompteService {
         }
         return accountNumber.toString();
     }
+    public Integer getSoldeByNumeroCart(String numeroCart)
+    {
+        return compteRepository.getSoldeByNumeroCart(numeroCart);
+    }
+    public Compte getCompteByNumeroCart(String numeroCart)
+    {
+        return getCompteByNumero(compteRepository.getnumeroCompteByNumeroCart(numeroCart));
+    }
+    public void miseAjourSolde(Compte compte)
+    {
+        compteRepository.save(compte);
+    }
 }
