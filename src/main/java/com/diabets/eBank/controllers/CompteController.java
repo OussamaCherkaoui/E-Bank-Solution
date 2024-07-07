@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/compte")
@@ -24,11 +25,11 @@ public class CompteController {
     BeneficiaireService beneficiaireService;
 
     @PostMapping("/signUpCompte")
-    public ResponseEntity<Compte> saveCompte(@RequestBody Compte compte) {
+    public ResponseEntity<?> saveCompte(@RequestBody Compte compte) {
         String numeroCompte = compteService.generateUniqueAccountNumber();
         compte.setNumeroCompte(numeroCompte);
         compte.setDateOuverture(LocalDate.now());
-        Compte saveCompte = compteService.ouvrirCompte(compte);
+        Optional<Compte> saveCompte = compteService.ouvrirCompte(compte);
         return new ResponseEntity<>(saveCompte, HttpStatus.CREATED);
     }
     @GetMapping("/logInCompte/{numeroCompte}/{mot_de_pass}")

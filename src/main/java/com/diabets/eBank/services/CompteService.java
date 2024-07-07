@@ -22,9 +22,9 @@ public class CompteService {
     @Autowired
     private CompteFermeRepository compteFermeRepository;
 
-    public Compte ouvrirCompte(Compte compte) {
+    public Optional<Compte> ouvrirCompte(Compte compte) {
         compte.setEstFerme(false);
-        return compteRepository.save(compte);
+        return Optional.of(compteRepository.save(compte));
     }
     public Optional<Compte> getCompteByNumeroAndMotDePass(String numero, Integer motDePass) {
         return compteRepository.findByNumeroCompteAndMotDePass(numero,motDePass);
@@ -38,7 +38,7 @@ public class CompteService {
     public CompteFerme fermeCompte(String numeroCompte,String raison)
     {
         compteRepository.fermeCompte(numeroCompte);
-        Compte compte = compteRepository.findByNumeroCompte(numeroCompte);
+        Compte compte = getCompteByNumero(numeroCompte);
         if(compte.getSolde()<0)
         {
             System.out.println("désole vous ne pouvez pas ferme le compte car votre Solde est inssufisant !!");

@@ -16,6 +16,7 @@ public class BeneficiaireService {
     public Beneficiaire ajouterBeneficiaire(Beneficiaire beneficiaire){
         return beneficiaireRepository.save(beneficiaire);
     }
+
     @Transactional
     public Beneficiaire deleteBeneficiaireByCompteAndNumeroCompteBeneficiaire(Compte compteProprietaire, String numeroCompteBeneficiaire)
     {
@@ -25,6 +26,5 @@ public class BeneficiaireService {
             return beneficiaire;
         }
         return null;
-
     }
 }
