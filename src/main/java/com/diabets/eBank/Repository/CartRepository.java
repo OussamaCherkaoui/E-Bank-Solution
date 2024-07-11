@@ -20,17 +20,25 @@ public interface CartRepository extends JpaRepository<Carte, Integer> {
     @Transactional
     @Query(value = "update Carte set etat='activer'  where numero_Carte = :numeroCart", nativeQuery = true)
     void activerCart(String numeroCart);
+
     @Modifying
     @Transactional
     @Query(value = "update Carte set etat='desactiver'  where numero_Carte = :numeroCart", nativeQuery = true)
     void desactiverCart(String numeroCart);
+
     @Modifying
     @Transactional
     @Query(value = "update Carte set est_bloque=true  where numero_carte = :numeroCart", nativeQuery = true)
     void bloqueCart(String numeroCart);
+
     Optional<Carte> findByNumeroCarteAndCodePin(String numero, Integer codePin);
     Carte findByNumeroCarte(String numero);
     boolean existsByNumeroCarte(String numero);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from Carte where numero_compte = :numeroCompte", nativeQuery = true)
+    void deleteAllCartByNumeroCompte(String numeroCompte);
 
     @Query(value = "select code_pin from Carte where numero_carte = :numeroCart", nativeQuery = true)
     Integer getCodePinbyNumeroCart(String numeroCart);

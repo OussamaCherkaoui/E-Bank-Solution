@@ -1,5 +1,6 @@
 package com.diabets.eBank.services;
 
+import com.diabets.eBank.Repository.CartRepository;
 import com.diabets.eBank.Repository.CompteFermeRepository;
 import com.diabets.eBank.Repository.CompteRepository;
 import com.diabets.eBank.models.Compte;
@@ -20,6 +21,8 @@ public class CompteService {
     @Autowired
     private CompteRepository compteRepository;
     @Autowired
+    private CartRepository cartRepository;
+    @Autowired
     private CompteFermeRepository compteFermeRepository;
 
     public Optional<Compte> ouvrirCompte(Compte compte) {
@@ -37,7 +40,6 @@ public class CompteService {
     @Transactional
     public CompteFerme fermeCompte(String numeroCompte,String raison)
     {
-        compteRepository.fermeCompte(numeroCompte);
         Compte compte = getCompteByNumero(numeroCompte);
         if(compte.getSolde()<0)
         {
@@ -45,6 +47,8 @@ public class CompteService {
             return null;
         }
         else{
+            compteRepository.fermeCompte(numeroCompte);
+            cartRepository.deleteAllCartByNumeroCompte(numeroCompte);
             CompteFerme compteFerme = new CompteFerme();
             compteFerme.setCompte(compte);
             compteFerme.setDateFermeture(LocalDate.now());

@@ -14,12 +14,13 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/signUp")
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
+    public ResponseEntity<User> signUp(@RequestBody User user) {
         User saveUser = userService.saveUser(user);
         return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
     }
     @GetMapping("/logIn/{userName}/{passWord}")
-    public ResponseEntity<User> getUserByNameAndPassWord(@PathVariable String userName,@PathVariable String passWord) {
+    public ResponseEntity<User> logIn(@PathVariable String userName,@PathVariable String passWord) {
         return ResponseEntity.of(userService.getUserByUserNameAndPassWord(userName,passWord));
     }
+
 }
