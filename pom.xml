@@ -120,6 +120,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>ebank</finalName>
 	</build>
 
 </project>
