@@ -1,5 +1,6 @@
 package com.diabets.eBank;
 
+import com.diabets.eBank.dto.BeneficiaireDTO;
 import com.diabets.eBank.models.Beneficiaire;
 import com.diabets.eBank.models.Compte;
 import com.diabets.eBank.services.BeneficiaireService;
@@ -33,10 +34,9 @@ public class BeneficiaireTest {
         beneficiaire.setCompte(compte);
 
 
-        Beneficiaire beneficiaireSaved = beneficiaireService.ajouterBeneficiaire(beneficiaire);
+        BeneficiaireDTO beneficiaireSaved = beneficiaireService.ajouterBeneficiaire(beneficiaire);
 
         assertNotNull(beneficiaireSaved);
-        assertEquals(numeroCompte, beneficiaireSaved.getCompte().getNumeroCompte());
         assertEquals(numeroCompteBeneficiaire, beneficiaireSaved.getNumeroCompteBeneficiaire());
     }
 

@@ -9,11 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface BeneficiaireRepository extends JpaRepository<Beneficiaire,Integer> {
 
     @Query(value = "SELECT b.* FROM Beneficiaire b WHERE b.numero_compte = :numeroCompte AND b.numero_compte_beneficiaire = :numeroCompteBeneficiaire",nativeQuery = true)
     Beneficiaire findBeneficiaireByCompteAndCompteBeneficiaire(@Param("numeroCompte") String numeroCompte, @Param("numeroCompteBeneficiaire") String numeroCompteBeneficiaire);
+
+    List<Beneficiaire> findByCompte_NumeroCompte(String numeroCompte);
 
     @Modifying
     @Transactional

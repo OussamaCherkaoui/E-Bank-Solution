@@ -1,5 +1,7 @@
 package com.diabets.eBank.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,10 +32,12 @@ public class Carte {
     @Column(columnDefinition = "boolean default false")
     private Boolean estBloque;
     @OneToMany(mappedBy = "carte", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Transaction> transactions = new ArrayList<>();
     @OneToOne(mappedBy = "carte")
     private CarteBloque carteBloque;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "numeroCompte")
     private Compte compte;
 }

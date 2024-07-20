@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/compte/cart/transaction")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class transactionController{
     @Autowired
     TransactionService transactionService;

@@ -41,19 +41,29 @@ public class CompteService {
     public CompteFerme fermeCompte(String numeroCompte,String raison)
     {
         Compte compte = getCompteByNumero(numeroCompte);
-        if(compte.getSolde()<0)
-        {
-            System.out.println("désole vous ne pouvez pas ferme le compte car votre Solde est inssufisant !!");
-            return null;
-        }
-        else{
-            compteRepository.fermeCompte(numeroCompte);
-            cartRepository.deleteAllCartByNumeroCompte(numeroCompte);
-            CompteFerme compteFerme = new CompteFerme();
-            compteFerme.setCompte(compte);
+        Optional<CompteFerme> existingCompte = compteFermeRepository.findByCompte(compte);
+
+        if (existingCompte.isPresent()) {
+            CompteFerme compteFerme = existingCompte.get();
             compteFerme.setDateFermeture(LocalDate.now());
             compteFerme.setRaison(raison);
             return compteFermeRepository.save(compteFerme);
+        }
+        else{
+            if(compte.getSolde()<0)
+            {
+                System.out.println("désole vous ne pouvez pas ferme le compte car votre Solde est inssufisant !!");
+                return null;
+            }
+            else{
+                compteRepository.fermeCompte(numeroCompte);
+                cartRepository.deleteAllCartByNumeroCompte(numeroCompte);
+                CompteFerme compteFerme = new CompteFerme();
+                compteFerme.setCompte(compte);
+                compteFerme.setDateFermeture(LocalDate.now());
+                compteFerme.setRaison(raison);
+                return compteFermeRepository.save(compteFerme);
+            }
         }
     }
 

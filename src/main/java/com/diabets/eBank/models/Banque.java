@@ -1,5 +1,6 @@
 package com.diabets.eBank.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,5 +29,6 @@ public class Banque {
     @Column
     private String email;
     @OneToMany(mappedBy = "banque", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Compte> comptes = new ArrayList<>();
 }

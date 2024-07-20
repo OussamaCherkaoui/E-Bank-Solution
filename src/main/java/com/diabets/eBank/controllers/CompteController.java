@@ -1,6 +1,10 @@
 package com.diabets.eBank.controllers;
 
 import com.diabets.eBank.Repository.BeneficiaireRepository;
+import com.diabets.eBank.dto.BeneficiaireDTO;
+import com.diabets.eBank.dto.CompteDTO;
+import com.diabets.eBank.mapper.BeneficiaireMapper;
+import com.diabets.eBank.mapper.CompteMapper;
 import com.diabets.eBank.models.Beneficiaire;
 import com.diabets.eBank.models.Compte;
 import com.diabets.eBank.models.CompteFerme;
@@ -14,10 +18,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/compte")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class CompteController {
     @Autowired
     CompteService compteService;
@@ -33,32 +40,49 @@ public class CompteController {
         return new ResponseEntity<>(saveCompte, HttpStatus.CREATED);
     }
     @GetMapping("/logInCompte/{numeroCompte}/{mot_de_pass}")
-    public ResponseEntity<Compte> getUserByNameAndPassWord(@PathVariable String numeroCompte,@PathVariable Integer mot_de_pass) {
-        return ResponseEntity.of(compteService.getCompteByNumeroAndMotDePass(numeroCompte,mot_de_pass));
+    public ResponseEntity<CompteDTO> getUserByNameAndPassWord(@PathVariable String numeroCompte,@PathVariable Integer mot_de_pass) {
+        Optional<Compte> compte = compteService.getCompteByNumeroAndMotDePass(numeroCompte, mot_de_pass);
+        if (compte.isPresent()) {
+            CompteDTO compteDTO = CompteMapper.toDTO(compte.get());
+            return ResponseEntity.ok(compteDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     @PostMapping("/fermeCompte/{numeroCompte}/{raison}")
-    public ResponseEntity<CompteFerme> fermerCompte(@PathVariable String numeroCompte,@PathVariable String raison) {
+    public ResponseEntity<?> fermerCompte(@PathVariable String numeroCompte,@PathVariable String raison) {
         CompteFerme saveCompteFerme = compteService.fermeCompte(numeroCompte,raison);
         return new ResponseEntity<>(saveCompteFerme, HttpStatus.CREATED);
     }
     @PostMapping("/ajouterBeneficiaire/{numeroCompte}/{numeroCompteBeneficiaire}")
-    public ResponseEntity<Beneficiaire> ajouterBeneficiaire(@PathVariable String numeroCompte,@PathVariable String numeroCompteBeneficiaire) {
+    public ResponseEntity<BeneficiaireDTO> ajouterBeneficiaire(@PathVariable String numeroCompte,@PathVariable String numeroCompteBeneficiaire) {
         Compte compteProprietaire = compteService.getCompteByNumero(numeroCompte);
         Beneficiaire beneficiaire = new Beneficiaire();
         beneficiaire.setCompte(compteProprietaire);
         beneficiaire.setNumeroCompteBeneficiaire(numeroCompteBeneficiaire);
-        Beneficiaire beneficiaireSaved = beneficiaireService.ajouterBeneficiaire(beneficiaire);
-        return new ResponseEntity<>(beneficiaireSaved, HttpStatus.CREATED);
+
+        BeneficiaireDTO beneficiaireDTO = beneficiaireService.ajouterBeneficiaire(beneficiaire);
+
+        return new ResponseEntity<>(beneficiaireDTO, HttpStatus.CREATED);
     }
     @DeleteMapping("/supprimerBeneficiaire/{numeroCompte}/{numeroCompteBeneficiaire}")
     public ResponseEntity<?> supprimerBeneficiaire(@PathVariable String numeroCompte,@PathVariable String numeroCompteBeneficiaire) {
         Compte compteProprietaire = compteService.getCompteByNumero(numeroCompte);
-        Beneficiaire deletedBeneficiaire = beneficiaireService.deleteBeneficiaireByCompteAndNumeroCompteBeneficiaire(compteProprietaire, numeroCompteBeneficiaire);
-
-        if (deletedBeneficiaire != null) {
-            return new ResponseEntity<>(deletedBeneficiaire, HttpStatus.OK);
+        Beneficiaire beneficiaire = beneficiaireService.deleteBeneficiaireByCompteAndNumeroCompteBeneficiaire(compteProprietaire, numeroCompteBeneficiaire);
+        if (beneficiaire != null) {
+            BeneficiaireDTO beneficiaireDto = BeneficiaireMapper.toDTO(beneficiaire);
+            return ResponseEntity.ok(beneficiaireDto);
         } else {
-            return new ResponseEntity<>("Échec de la suppression du bénéficiaire.", HttpStatus.NOT_FOUND);
+            return null;
         }
+    }
+
+    @GetMapping("/getAllBeneficiaire/{numeroCompte}")
+    public ResponseEntity<List<BeneficiaireDTO>> ajouterBeneficiaire(@PathVariable String numeroCompte) {
+        List<Beneficiaire> beneficiaires = beneficiaireService.getAllBeneficiaireByNumeroCompte(numeroCompte);
+        List<BeneficiaireDTO> beneficiaireDTOs = beneficiaires.stream()
+                .map(BeneficiaireMapper::toDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(beneficiaireDTOs, HttpStatus.OK);
     }
 }

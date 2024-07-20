@@ -1,5 +1,6 @@
 package com.diabets.eBank.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,6 +29,7 @@ public class Transaction {
     @Column
     private String description;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "numeroCarte")
     private Carte carte;
     @OneToOne
